@@ -66,7 +66,7 @@ def process_file(filepath, mode):
                 sizeR = []
                 for e in range(count):
                     crcN = crcArr[index]
-                    dname = f"_{name}/{crcN}.{e}.dds"
+                    dname = os.path.join(f"_{name}", f"{crcN}.{e}.dds")
                     if mode == "u":
                         with open(dname, "wb") as tFile:
                             tFile.write(reader.readBytes(sizeArr[index]))
@@ -115,7 +115,7 @@ def process_file(filepath, mode):
                 somedata = reader.readInt32()
                 sizeOff = reader.offset()
                 size = reader.readUInt32()
-                tName = f"_{name}/{name}.{f}.dds"
+                tName = os.path.join(f"_{name}", f"{name}.{f}.dds")
                 if mode == "u":
                     with open(tName, "wb") as tF:
                         tF.write(reader.readBytes(size))
@@ -183,7 +183,7 @@ def process_file(filepath, mode):
                 sizeR = []
                 for e in range(count):
                     crcN = crcArr[index].hex()
-                    dname = f"_{name}/{crcN}.{e}.dds"
+                    dname = os.path.join(f"_{name}", f"{crcN}.{e}.dds")
                     if mode == "u":
                         with open(dname, "wb") as tFile:
                             tFile.write(reader.readBytes(sizeArr[index]))
