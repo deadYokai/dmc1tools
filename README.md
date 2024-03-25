@@ -4,7 +4,7 @@
 * Python 3
 
 ## Usage:
-* ### Dat Files:
+* ### Dat/Itm Files:
     ```bash
     $ python3 datExtractor.py <datfile>
     ```

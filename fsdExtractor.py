@@ -8,7 +8,7 @@ from contextlib import chdir
 def o(fff):
     fn = fff.stem
     ff = str(fff)
-    os.makedirs(fn, exist_ok=True)
+    os.makedirs(f"_{fn}", exist_ok=True)
     with open(ff, "rb") as f:
         reader = BinaryStream(f)
         f.seek(0, os.SEEK_END)
@@ -47,11 +47,11 @@ def o(fff):
             if stringData[:4] == b'\x0023T':
                 key += ".t32"
                 toE = True
-            with open(f"{fn}/{key}", "wb") as out:
+            with open(f"_{fn}/{key}", "wb") as out:
                 out.write(stringData)
 
             if toE:
-                with chdir(fn):
+                with chdir(f"_{fn}"):
                     textureRepack.process_file(Path(f"{key}"), "u")
 
             print(f"Extracted: {key}")
