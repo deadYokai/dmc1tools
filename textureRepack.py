@@ -78,7 +78,7 @@ def process_file(filepath, mode):
                             sizeR.append(size)
                             tFile.seek(0)
                             fileData.append(tFile.read())
-                            print(f"Packing: {dname}")
+                            print(f"Packing: {dname} to {nn}")
 
                 for i in range(len(sizeR)):
                     s = sizeR[i]
@@ -105,7 +105,8 @@ def process_file(filepath, mode):
             reader.readBytes(8)
             count = reader.readInt32()
             if mode == "p":
-                moddedFile = open(f"{name}_new.{tafs_checker}", "wb")
+                nn = f"{name}_new.{tafs_checker}"
+                moddedFile = open(nn, "wb")
                 r = BinaryStream(moddedFile)
                 o = reader.offset()
                 reader.seek(0)
@@ -125,7 +126,7 @@ def process_file(filepath, mode):
                         tF.seek(0, os.SEEK_END)
                         mSize = tF.tell()
                         tF.seek(0)
-                        print(f"Packing: {tName}")
+                        print(f"Packing: {tName} to {nn}")
 
                         r.writeUInt32(somedata)
                         r.writeUInt32(mSize)
@@ -168,7 +169,7 @@ def process_file(filepath, mode):
                     reader.readBytes(120)
                     checkOff = reader.readInt32()
                     reader.seek(reader.offset()-4)
-            print(sizeArr)
+
             reader.seek(dataOffset)
             index = 0
             if mode == "p":
@@ -195,7 +196,7 @@ def process_file(filepath, mode):
                             sizeR.append(size)
                             tFile.seek(0)
                             fileData.append(tFile.read())
-                            print(f"Packing: {dname}")
+                            print(f"Packing: {dname} to {nn}")
 
                 for i in range(len(sizeR)):
                     s = sizeR[i]

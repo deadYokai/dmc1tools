@@ -4,14 +4,15 @@
 * Python 3
 
 ## Usage:
-* ### Dat/Itm Files:
-    ```bash
-    $ python3 datExtractor.py <datfile>
-    ```
+* ### Fsd/Dat/Itm Files:
 
-* ### Fsd Files:
+   #### Unpack:
     ```bash
-    $ python3 fsdExtractor.py <fsdfile>
+    $ python3 dataRepack.py <texturefile>
+    ```
+    #### Repack:
+    ```bash
+    $ python3 dataRepack.py -p <texturefile>
     ```
 
 * ### Texture Files:
