@@ -8,11 +8,11 @@
 
    #### Unpack:
     ```bash
-    $ python3 dataRepack.py <texturefile>
+    $ python3 dataRepack.py <file>
     ```
     #### Repack:
     ```bash
-    $ python3 dataRepack.py -p <texturefile>
+    $ python3 dataRepack.py -p <file>
     ```
 
 * ### Texture Files:
