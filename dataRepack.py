@@ -69,8 +69,7 @@ def repackData(fff, mode):
                             data2 = fileSize - pos1
                         sizeList.append(data2)
 
-            if fsd:
-                offsetList.sort()
+            offsetList.sort()
 
             for a in range(len(offsetList)):
                 key = hex(offsetList[a])
@@ -139,7 +138,7 @@ def repackData(fff, mode):
                         keyFile.seek(0)
 
                         modReader.seek(offset4offset[offsetList[a]])
-                        modReader.writeUInt32(offsetList[a])
+                        modReader.writeUInt32(ps)
 
                         if itm:
                             modReader.writeUInt32(fileSize)
