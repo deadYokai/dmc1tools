@@ -1,7 +1,9 @@
+import io
 from binary import BinaryStream
 from pathlib import Path
 import os
 import argparse
+import struct
 
 import textureRepack
 from contextlib import chdir
@@ -72,7 +74,7 @@ def repackData(fff, mode):
             offsetList.sort()
 
             for a in range(len(offsetList)):
-                key = hex(offsetList[a])
+                key = struct.pack("I", offsetList[a]).hex()
                 reader.seek(offsetList[a])
 
                 if itm:
@@ -95,6 +97,33 @@ def repackData(fff, mode):
                 if stringData[:4] == b'\x0023T':
                     key += ".t32"
                     toE = True
+
+                with io.BytesIO(stringData) as m:
+                    mr = BinaryStream(m)
+                    msize = len(stringData)
+                    mcount = mr.readUInt32()
+                    mfoff = 0
+                    if mcount < msize:
+                        mpassed = False
+                        for i in range(mcount):
+                            moffset = mr.readUInt32()
+                            if i == 0:
+                                mfoff = moffset
+                            if moffset < msize:
+                                mesize = mr.readUInt32()
+                                if (mesize < msize) and (mr.offset() < mfoff):
+                                    mpassed = True
+                                else:
+                                    mpassed = False
+                                    break
+                            else:
+                                mpassed = False
+                                break
+                        if mpassed:
+                            if mr.readUInt32() == 0:
+                                key += ".msg"
+
+
 
                 with open(index_path, "a") as indexFile:
                     indexFile.write(key + '\t' + str(offsetList[a]) + '\t' + str(offset4offset[offsetList[a]]) + '\n')
