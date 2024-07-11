@@ -74,7 +74,7 @@ def repackData(fff, mode):
             offsetList.sort()
 
             for a in range(len(offsetList)):
-                key = struct.pack("I", offsetList[a]).hex()
+                key = struct.pack("<I", offsetList[a]).hex()
                 reader.seek(offsetList[a])
 
                 if itm:
