@@ -12,7 +12,7 @@ with open("charindex.txt", "r") as chi:
 
 msgIn = sys.argv[1]
 
-string = ''
+stringData = ''
 with open(msgIn, 'rb') as mf:
     mf.seek(0, os.SEEK_END)
     fs = mf.tell()
@@ -26,7 +26,7 @@ with open(msgIn, 'rb') as mf:
         size = struct.unpack('i', mf.read(4))[0]
         mf.seek(off)
         data = mf.read(size)
-
+        string = ''
         d = io.BytesIO(data)
         while d.tell() < size:
             dat = d.read(1)
@@ -36,12 +36,14 @@ with open(msgIn, 'rb') as mf:
                     a = d.read(1)
                     string += f"[{q.hex()}:{a.hex()}]"
                 elif q == b'\x0E':
-                    string += f"[ENDSTRING:{d.read(size - d.tell()).hex()}]\n\n"
+                    string += f"\n[ENDSTRING:{d.read(size - d.tell()).hex()}]"
                     break
                 elif q == b'\x05':
                     string += " "
                     # with Image(width=16,height=32) as img:
                     #     img.save(filename=f"test/{i}/{ig}_space.dds")
+                elif q == b'\x0c':
+                    string += "\n"
                 else:
                     string += f"[{q.hex()}]"
                 continue
@@ -68,12 +70,13 @@ with open(msgIn, 'rb') as mf:
             #         with img[x:x+16, y:y+32] as ci:
             #             ci.save(filename=f"test/{i}/{ig}.dds")
             ig += 1
+        stringData += ";;;STR\n" + string + "\n;;;ENDSTR\n\n"
 
 with open(f"{msgIn}.txt", "w") as msgText:
     msgText.write(";;;CHARTABLE\n")
     msgText.write(charTableEngText)
     msgText.write(";;;ENDCHARTABLE\n\n")
-    msgText.write(string)
+    msgText.write(stringData)
 
 
 
