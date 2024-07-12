@@ -6,7 +6,7 @@ from wand.image import Image
 import ast
 
 def extract(msgIn, charsFile = None, out = None):
-    print(f"\n---- Exctracting {msgIn}")
+    print(f"\n---- Extracting {msgIn}")
     dir_path = os.path.dirname(os.path.realpath(__file__))
     if charsFile == None:
         charsFile = f"{dir_path}/charindex.txt"
