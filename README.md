@@ -33,5 +33,15 @@
 
 * ### MSG Files:
   
-    #### Coming soon
+    ```
+    ---- MSG Repacker (DMC 1) ----
+    ---- by deadYokai         ----
+
+    ---- Usage: python3 msg.py [options] <filename>
+
+    ---- Options:
+         -e      Extract msg to txt (default option)
+         -p      Pack txt to msg
+         -c      Charset file (default: charindex.txt)
+    ```
 
