@@ -166,7 +166,10 @@ def pack(txtIn, out = None):
                     if ff == ":":
                         arg = dat.read(1)
                         if arg == "[":
-                            pass
+                            arrEnd = string.find("]", dat.tell())
+                            arr = dat.read(arrEnd - dat.tell()).split(',')
+                            dat.seek(p)
+                            arg = ''.join(arr)
                         else:
                             arg += dat.read(1)
                         dat.seek(p)
