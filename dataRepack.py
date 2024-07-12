@@ -6,6 +6,7 @@ import argparse
 import struct
 
 import textureRepack
+import msg
 from contextlib import chdir
 
 def repackData(fff, mode):
@@ -74,8 +75,9 @@ def repackData(fff, mode):
             offsetList.sort()
 
             for a in range(len(offsetList)):
-                key = struct.pack("<I", offsetList[a]).hex()
+                key = struct.pack("I", offsetList[a]).hex()
                 reader.seek(offsetList[a])
+                ext = None
 
                 if itm:
                     size = sizeList[a]
@@ -89,15 +91,18 @@ def repackData(fff, mode):
 
                 toE = False
                 if stringData[:4] == b'ipum':
-                    key += ".ip2"
+                    ext = ".ip2"
                     toE = True
                 if stringData[:4] == b'\x002MT':
-                    key += ".tm2"
+                    ext = ".tm2"
                     toE = True
                 if stringData[:4] == b'\x0023T':
-                    key += ".t32"
+                    ext = ".t32"
                     toE = True
-
+                if stringData[8:16] == b'PLAYER D':
+                    ext = ".playerD"
+                
+                isMsg = False
                 with io.BytesIO(stringData) as m:
                     mr = BinaryStream(m)
                     msize = len(stringData)
@@ -120,8 +125,22 @@ def repackData(fff, mode):
                                 mpassed = False
                                 break
                         if mpassed:
-                            if mr.readUInt32() == 0:
-                                key += ".msg"
+                            mendDat = mr.readUInt32()
+                            if mendDat == 0:
+                                isMsg = True
+                                ext = ".msg"
+                            else:
+                                if mendDat < msize:
+                                    mr.seek(mendDat)
+                                    diff = msize - mr.offset()
+                                    if mr.readBytes(diff) == bytes(diff):
+                                        isMsg = True
+                                        ext = ".msg"
+                
+                if ext == None:
+                    ext = ".unk"
+
+                key += ext
 
 
 
@@ -134,6 +153,9 @@ def repackData(fff, mode):
                 if toE:
                     with chdir(f"_{fn}"):
                         textureRepack.process_file(Path(f"{key}"), "u")
+                if isMsg:
+                    os.makedirs(f"_{fn}/text", exist_ok=True)
+                    msg.extract(f"_{fn}/{key}", out=f"_{fn}/text/{key}.txt")
 
                 print(f"Extracted: {key}")
         elif mode == "p":
