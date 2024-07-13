@@ -10,7 +10,7 @@ def extract(msgIn, charsFile = None, out = None):
     dir_path = os.path.dirname(os.path.realpath(__file__))
     if charsFile == None:
         charsFile = f"{dir_path}/charindex.txt"
-    with open(charsFile, "r") as chi:
+    with open(charsFile, "r", encoding="utf-8") as chi:
         charTableEngText = chi.read()
         charTableEng = ast.literal_eval(charTableEngText)
 
@@ -137,7 +137,7 @@ def pack(txtIn, out = None):
     if chartable == None:
         dir_path = os.path.dirname(os.path.realpath(__file__))
         charsFile = f"{dir_path}/charindex.txt"
-        with open(charsFile, "r") as chi:
+        with open(charsFile, "r", encoding='utf-8') as chi:
             chartable = ast.literal_eval(chi.read())
 
     if cmdByte == None or endHeaderData == None or strings == []:
