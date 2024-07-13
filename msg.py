@@ -100,7 +100,7 @@ def extract(msgIn, charsFile = None, out = None):
         
         stringData += "\n" #EOF
 
-    with open(out, "w") as msgText:
+    with open(out, "w", encoding='utf-8') as msgText:
         msgText.write(";;;CHARTABLE\n")
         msgText.write(charTableEngText)
         msgText.write(";;;ENDCHARTABLE\n\n")
@@ -117,7 +117,7 @@ def pack(txtIn, out = None):
     endHeaderData = None
     cmdByte = None
     strings = []
-    with open(txtIn, "r") as msg:
+    with open(txtIn, "r", encoding='utf-8') as msg:
         args = msg.read().split(';;;')
         for i in range(len(args)):
             if args[i] == "ENDCHARTABLE\n\n":
@@ -196,20 +196,30 @@ def pack(txtIn, out = None):
             elif d == '\n':
                 strBytes += cmdByte + b'\x0c'
             else:
-                strBytes += struct.pack("B", invCharTable[d])
+                try:
+                    strBytes += struct.pack("B", invCharTable[d])
+                except KeyError:
+                    raise ValueError(f"Symbol '{d}'({ord(d)}) not found in CHARTABLE")
             d = dat.read(1)
         strBytes += strEnd
+        da = len(strBytes) & 1
+        while da != 0:
+            strBytes += b'\x00'
+            da = len(strBytes) & 1
+            
         strData.append(strBytes)
         
     with io.BytesIO(msgBytes) as mb:
         for a in range(len(strData)):
             mb.seek(0, os.SEEK_END)
-            off = struct.pack("I", mb.tell())
-            size = struct.pack("I", len(strData[a]))
+            off = mb.tell()
+            offBytes = struct.pack("I", off)
+            size = len(strData[a])
+            sizeBytes = struct.pack("I", size)
             mb.write(strData[a])
             mb.seek(4 + (a*8))
-            mb.write(off)
-            mb.write(size)
+            mb.write(offBytes)
+            mb.write(sizeBytes)
         mb.seek(0)
         msgBytes = mb.read()
 

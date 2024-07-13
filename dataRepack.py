@@ -9,7 +9,7 @@ import textureRepack
 import msg
 from contextlib import chdir
 
-def repackData(fff, mode):
+def repackData(fff, mode, charset):
     fn = fff.stem
     ff = str(fff)
     os.makedirs(f"_{fn}", exist_ok=True)
@@ -155,7 +155,7 @@ def repackData(fff, mode):
                         textureRepack.process_file(Path(f"{key}"), "u")
                 if isMsg:
                     os.makedirs(f"_{fn}/text", exist_ok=True)
-                    msg.extract(f"_{fn}/{key}", out=f"_{fn}/text/{key}.txt")
+                    msg.extract(f"_{fn}/{key}", out=f"_{fn}/text/{key}.txt", charsFile=charset)
 
                 print(f"Extracted: {key}")
         elif mode == "p":
@@ -204,6 +204,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = 'FSD/DAT/ITM Extractor (DMC1)', epilog = 'Work in progress')
     parser.add_argument("filename", help = "File")
     parser.add_argument("-p", "--pack", help = "Pack file", default=False, action = argparse.BooleanOptionalAction)
+    parser.add_argument("-c", "--charset", help = "Charset for MSG files")
     args = parser.parse_args()
     fp = Path(args.filename)
 
@@ -212,4 +213,4 @@ if __name__ == "__main__":
     else:
         process = "u"
 
-    repackData(fp, process)
+    repackData(fp, process, args.charset)
