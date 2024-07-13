@@ -6,7 +6,7 @@ from wand.image import Image
 import ast
 
 def extract(msgIn, charsFile = None, out = None):
-    print(f"\n---- Extracting {msgIn}")
+    print(f"\n---- Extracting  {msgIn}")
     dir_path = os.path.dirname(os.path.realpath(__file__))
     if charsFile == None:
         charsFile = f"{dir_path}/charindex.txt"
@@ -64,7 +64,10 @@ def extract(msgIn, charsFile = None, out = None):
                     else:
                         string += f"{{{q.hex()}}}"
                     continue
-                itm = struct.unpack("B", dat)[0]
+                if dat == b'\x72':
+                    itm = struct.unpack("B", d.read(1))[0]
+                else:  
+                    itm = struct.unpack("B", dat)[0]
                 try:
                     string += charTableEng[itm]
                 except:
@@ -197,6 +200,8 @@ def pack(txtIn, out = None):
                 strBytes += cmdByte + b'\x0c'
             else:
                 try:
+                    if invCharTable[d] >= 112:
+                        strBytes += b'\x72'
                     strBytes += struct.pack("B", invCharTable[d])
                 except KeyError:
                     raise ValueError(f"Symbol '{d}'({ord(d)}) not found in CHARTABLE")
