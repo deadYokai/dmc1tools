@@ -129,6 +129,10 @@ def repackData(fff, mode, charset):
                             if mendDat == 0:
                                 isMsg = True
                                 ext = ".msg"
+                            elif mr.readUInt32() == 0:
+                                isMsg = True
+                                ext = ".msg"
+                                mr.seek(mr.offset() - 4)
                             else:
                                 if mendDat < msize:
                                     mr.seek(mendDat)
