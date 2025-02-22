@@ -41,6 +41,10 @@ def repackData(fff, mode, charset):
             fsd = True
             itm = False
             fOffset = reader.readUInt32() # reassign a true first offset for FSD files
+            if fOffset == 0:
+                fOffset = reader.readUInt32()
+                if fOffset == 0:
+                    fOffset = reader.readUInt32()
 
         print(f"Processing file {ff}")
 
